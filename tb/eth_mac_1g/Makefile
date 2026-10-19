@@ -62,6 +62,17 @@ ifeq ($(SIM), icarus)
 		VERILOG_SOURCES += iverilog_dump.v
 		COMPILE_ARGS += -s iverilog_dump
 	endif
+else ifeq ($(SIM), isim)
+	# iSim (True North Silicon): the module parameters reach the build as
+	# -defparam, the way they reach Icarus as -P and Verilator as -G
+	# (the simulator makefile is iSim's Makefile.isim).
+	COMPILE_ARGS += $(foreach v,$(filter PARAM_%,$(.VARIABLES)),-defparam $(TOPLEVEL).$(subst PARAM_,,$(v))=$($(v)))
+
+else ifeq ($(SIM), dsim)
+	# dsim: cocotb's Makefile.dsim reads EXTRA_ARGS on its build and run
+	# command lines alike, and has no COMPILE_ARGS.
+	EXTRA_ARGS += $(foreach v,$(filter PARAM_%,$(.VARIABLES)),-defparam $(TOPLEVEL).$(subst PARAM_,,$(v))=$($(v)))
+
 else ifeq ($(SIM), verilator)
 	COMPILE_ARGS += -Wno-SELRANGE -Wno-WIDTH
 
