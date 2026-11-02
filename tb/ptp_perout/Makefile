@@ -58,11 +58,6 @@ else ifeq ($(SIM), isim)
 	# (the simulator makefile is iSim's Makefile.isim).
 	COMPILE_ARGS += $(foreach v,$(filter PARAM_%,$(.VARIABLES)),-defparam $(TOPLEVEL).$(subst PARAM_,,$(v))=$($(v)))
 
-else ifeq ($(SIM), dsim)
-	# dsim: cocotb's Makefile.dsim reads EXTRA_ARGS on its build and run
-	# command lines alike, and has no COMPILE_ARGS.
-	EXTRA_ARGS += $(foreach v,$(filter PARAM_%,$(.VARIABLES)),-defparam $(TOPLEVEL).$(subst PARAM_,,$(v))=$($(v)))
-
 else ifeq ($(SIM), verilator)
 	COMPILE_ARGS += -Wno-SELRANGE -Wno-WIDTH
 
